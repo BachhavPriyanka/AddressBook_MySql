@@ -40,22 +40,42 @@ func main() {
 
 func Operation() {
 	var option int
-	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Display Contacts\n3.Exit")
+	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Display Contacts\n3.Details of Persons belongs to same city and state\n4.Exit")
 	fmt.Scanln(&option)
 	switch option {
 	case 1:
 		addContact()
-		//Operation()
 	case 2:
 		fmt.Println(DatabaseReader())
-		//Operation()
 	case 3:
-		//break
+		fmt.Println(findCityState())
+	case 4:
 		return
 	}
 	Operation()
 }
 
+func findCityState() ([]Contact, error) {
+	var contacts []Contact
+	var newcityStateName string
+	fmt.Println("To Find Persons From Same City and state \nEnter City or State :")
+	fmt.Scanln(&newcityStateName)
+	rows, err := db.Query("SELECT * From Contact WHERE City = ? OR State = ?", newcityStateName, newcityStateName)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var person Contact
+		if err := rows.Scan(&person.id, &person.FirstName, &person.LastName, &person.Address, &person.City, &person.State, &person.PhoneNumber, &person.Email); err != nil {
+			return nil,
+				fmt.Errorf("error in query : %v", err)
+		}
+		contacts = append(contacts, person)
+	}
+	return contacts, nil
+}
 func DatabaseReader() ([]Contact, error) {
 	var contacts []Contact
 
