@@ -40,7 +40,7 @@ func main() {
 
 func Operation() {
 	var option int
-	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Display Contacts\n3.Details of Persons belongs to same city and state\n4.Exit")
+	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Display Contacts\n3.Details of Persons belongs to same city and state\n4.Count of Persons belongs to same city and state\n5.Exit")
 	fmt.Scanln(&option)
 	switch option {
 	case 1:
@@ -50,11 +50,32 @@ func Operation() {
 	case 3:
 		fmt.Println(findCityState())
 	case 4:
+		findCityStateCount()
+	case 5:
 		return
 	}
 	Operation()
 }
 
+func findCityStateCount() {
+	var cityStateName string
+
+	fmt.Println("To Find the Count of Persons From Same City and State\nEnter City or State:")
+	fmt.Scanln(&cityStateName)
+	rows, err := db.Query("SELECT Count(*) FROM Contact WHERE City = ? OR State = ?", cityStateName, cityStateName)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var citystate string
+		if err := rows.Scan(&citystate); err != nil {
+			panic(err.Error())
+		}
+		fmt.Printf("Person Present : %s\n", citystate)
+	}
+}
 func findCityState() ([]Contact, error) {
 	var contacts []Contact
 	var newcityStateName string
