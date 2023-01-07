@@ -40,21 +40,100 @@ func main() {
 
 func Operation() {
 	var option int
-	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Display Contacts\n3.Details of Persons belongs to same city and state\n4.Count of Persons belongs to same city and state\n5.Exit")
+	fmt.Println("\n-------------- Select which operation do you wanna perform --------------\n1.Add Contact\n2.Update Contact \n3.Display Contacts\n4.Details of Persons belongs to same city and state\n5.Count of Persons belongs to same city and state\n6.Exit")
 	fmt.Scanln(&option)
 	switch option {
 	case 1:
 		addContact()
 	case 2:
-		fmt.Println(DatabaseReader())
+		var updateID int
+		fmt.Println("Enter a ID which you want to Update :")
+		fmt.Scanln(&updateID)
+		updateContact(updateID)
 	case 3:
-		fmt.Println(findCityState())
+		fmt.Println(DatabaseReader())
 	case 4:
-		findCityStateCount()
+		fmt.Println(findCityState())
 	case 5:
+		findCityStateCount()
+	case 6:
 		return
 	}
 	Operation()
+}
+
+func updateContact(updateID int) {
+	var person Contact
+	var option int
+	fmt.Println("Which Field do you want to Update \n1.FirstName\n.LastName\n3.Address\n4.City\n5.State\n6.Phone Number\n7.Email ID")
+	fmt.Scanln(&option)
+	switch option {
+	case 1:
+		fmt.Println("Enter First Name: ")
+		fmt.Scanln(&person.FirstName)
+		result, err := db.Exec("UPDATE Contact SET FirstName = ? where id = ?", person.FirstName, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+
+	case 2:
+		fmt.Println("Enter Last Name: ")
+		fmt.Scanln(&person.LastName)
+		result, err := db.Exec("Update Contact SET LastName = ? where id = ?", person.LastName, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	case 3:
+		fmt.Println("Enter Address: ")
+		fmt.Scanln(&person.Address)
+		result, err := db.Exec("Update Contact SET Address = ? where id = ?", person.Address, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	case 4:
+		fmt.Println("Enter City: ")
+		fmt.Scanln(&person.City)
+		result, err := db.Exec("Update Contact SET City = ? where id = ?", person.City, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	case 5:
+		fmt.Println("Enter State: ")
+		fmt.Scanln(&person.State)
+		result, err := db.Exec("Update Contact SET State = ? where id = ?", person.State, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	case 6:
+		fmt.Println("Enter Phone Number: ")
+		fmt.Scanln(&person.PhoneNumber)
+		result, err := db.Exec("Update Contact SET PhoneNumber = ? where id = ?", person.PhoneNumber, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	case 7:
+		fmt.Println("Enter Email-Id: ")
+		fmt.Scanln(&person.Email)
+		result, err := db.Exec("Update Contact SET Email = ? where id = ?", person.Email, updateID)
+		if err != nil {
+			panic(err.Error())
+		}
+		id, _ := result.RowsAffected()
+		fmt.Println(id)
+	}
+
 }
 
 func findCityStateCount() {
